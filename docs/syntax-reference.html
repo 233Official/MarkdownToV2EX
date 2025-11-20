@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>V2EX Markdown 语法参考</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Helvetica Neue", Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f5f5f5;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            color: #2c3e50;
+            border-bottom: 3px solid #4a90e2;
+            padding-bottom: 10px;
+            margin-bottom: 30px;
+        }
+
+        h2 {
+            color: #34495e;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            padding-top: 10px;
+            border-top: 1px solid #eee;
+        }
+
+        h3 {
+            color: #555;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+
+        .example-box {
+            background-color: #f8f9fa;
+            border-left: 4px solid #4a90e2;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 4px;
+        }
+
+        .example-title {
+            font-weight: bold;
+            color: #4a90e2;
+            margin-bottom: 10px;
+        }
+
+        code {
+            background-color: #f4f4f4;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+            font-size: 0.9em;
+        }
+
+        pre {
+            background-color: #f4f4f4;
+            padding: 15px;
+            border-radius: 6px;
+            overflow-x: auto;
+            margin: 10px 0;
+        }
+
+        pre code {
+            background: none;
+            padding: 0;
+        }
+
+        .supported {
+            color: #27ae60;
+        }
+
+        .unsupported {
+            color: #e74c3c;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #4a90e2;
+            color: white;
+            font-weight: 600;
+        }
+
+        tr:hover {
+            background-color: #f5f5f5;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #4a90e2;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+
+        .note {
+            background-color: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+
+        .note-title {
+            font-weight: bold;
+            color: #856404;
+            margin-bottom: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="../index.html" class="back-link">← 返回转换工具</a>
+        
+        <h1>📖 V2EX Markdown 语法参考</h1>
+
+        <div class="note">
+            <div class="note-title">⚠️ 重要提示</div>
+            <p>V2EX 支持基础的 Markdown 语法，但相比标准 Markdown 或 GitHub Flavored Markdown (GFM) 有一些限制。本文档详细说明了 V2EX 支持和不支持的功能。</p>
+        </div>
+
+        <h2>✅ 支持的语法</h2>
+
+        <h3>1. 标题 (Headings)</h3>
+        <div class="example-box">
+            <div class="example-title">语法：</div>
+            <pre><code># 一级标题
+## 二级标题
+### 三级标题</code></pre>
+            <div class="example-title">显示效果：</div>
+            <p>显示为不同大小的标题</p>
+        </div>
+
+        <h3>2. 粗体 (Bold)</h3>
+        <div class="example-box">
+            <div class="example-title">语法：</div>
+            <pre><code>**粗体文本**
+__粗体文本__</code></pre>
+            <div class="example-title">显示效果：</div>
+            <p><strong>粗体文本</strong></p>
+        </div>
+
+        <h3>3. 斜体 (Italic)</h3>
+        <div class="example-box">
+            <div class="example-title">语法：</div>
+            <pre><code>*斜体文本*
+_斜体文本_</code></pre>
+            <div class="example-title">显示效果：</div>
+            <p><em>斜体文本</em></p>
+        </div>
+
+        <h3>4. 删除线 (Strikethrough)</h3>
+        <div class="example-box">
+            <div class="example-title">语法：</div>
+            <pre><code>~~删除的文本~~</code></pre>
+            <div class="example-title">显示效果：</div>
+            <p><del>删除的文本</del></p>
+        </div>
+
+        <h3>5. 行内代码 (Inline Code)</h3>
+        <div class="example-box">
+            <div class="example-title">语法：</div>
+            <pre><code>`代码片段`</code></pre>
+            <div class="example-title">显示效果：</div>
+            <p><code>代码片段</code></p>
+        </div>
+
+        <h3>6. 代码块 (Code Block)</h3>
+        <div class="example-box">
+            <div class="example-title">语法：</div>
+            <pre><code>```python
+def hello():
+    print("Hello, V2EX!")
+```</code></pre>
+            <div class="example-title">显示效果：</div>
+            <pre><code>def hello():
+    print("Hello, V2EX!")</code></pre>
+        </div>
+
+        <h3>7. 无序列表 (Unordered List)</h3>
+        <div class="example-box">
+            <div class="example-title">语法：</div>
+            <pre><code>- 列表项 1
+- 列表项 2
+  - 子列表项
+- 列表项 3</code></pre>
+            <div class="example-title">也可以使用 * 或 +：</div>
+            <pre><code>* 列表项
++ 列表项</code></pre>
+        </div>
+
+        <h3>8. 有序列表 (Ordered List)</h3>
+        <div class="example-box">
+            <div class="example-title">语法：</div>
+            <pre><code>1. 第一项
+2. 第二项
+3. 第三项</code></pre>
+        </div>
+
+        <h3>9. 链接 (Links)</h3>
+        <div class="example-box">
+            <div class="example-title">语法：</div>
+            <pre><code>[链接文本](https://v2ex.com)</code></pre>
+            <div class="example-title">显示效果：</div>
+            <p><a href="https://v2ex.com">链接文本</a></p>
+        </div>
+
+        <h3>10. 引用 (Blockquote)</h3>
+        <div class="example-box">
+            <div class="example-title">语法：</div>
+            <pre><code>> 这是一段引用文本
+> 可以有多行</code></pre>
+            <div class="example-title">显示效果：</div>
+            <blockquote style="border-left: 4px solid #4a90e2; padding-left: 15px; color: #666; margin: 10px 0;">
+                这是一段引用文本<br>
+                可以有多行
+            </blockquote>
+        </div>
+
+        <h3>11. 分隔线 (Horizontal Rule)</h3>
+        <div class="example-box">
+            <div class="example-title">语法：</div>
+            <pre><code>---
+***
+___</code></pre>
+            <div class="example-title">显示效果：</div>
+            <hr style="border: none; border-top: 2px solid #ddd; margin: 10px 0;">
+        </div>
+
+        <h2>❌ 不支持的语法</h2>
+
+        <h3>1. 图片 (Images)</h3>
+        <div class="example-box">
+            <div class="example-title">标准语法：</div>
+            <pre><code>![图片描述](https://example.com/image.jpg)</code></pre>
+            <div class="example-title">V2EX 处理：</div>
+            <p>V2EX 会过滤图片标签，不会显示内联图片。本工具会将图片转换为链接：</p>
+            <pre><code>[🖼️ 图片: 图片描述](https://example.com/image.jpg)</code></pre>
+        </div>
+
+        <h3>2. 表格 (Tables)</h3>
+        <div class="example-box">
+            <div class="example-title">标准语法：</div>
+            <pre><code>| 列1 | 列2 |
+|-----|-----|
+| A   | B   |</code></pre>
+            <div class="example-title">V2EX 处理：</div>
+            <p>V2EX 不支持 Markdown 表格。本工具会将表格转换为文本表示形式。</p>
+        </div>
+
+        <h3>3. 任务列表 (Task Lists)</h3>
+        <div class="example-box">
+            <div class="example-title">标准语法：</div>
+            <pre><code>- [ ] 未完成任务
+- [x] 已完成任务</code></pre>
+            <div class="example-title">V2EX 处理：</div>
+            <p>本工具会将任务列表转换为带有符号的普通列表：</p>
+            <pre><code>- ○ 未完成任务
+- ✓ 已完成任务</code></pre>
+        </div>
+
+        <h3>4. 脚注 (Footnotes)</h3>
+        <div class="example-box">
+            <div class="example-title">标准语法：</div>
+            <pre><code>这是文本[^1]
+
+[^1]: 这是脚注</code></pre>
+            <div class="example-title">V2EX 处理：</div>
+            <p>V2EX 不支持脚注，本工具会移除脚注标记和定义。</p>
+        </div>
+
+        <h3>5. HTML 标签</h3>
+        <div class="example-box">
+            <div class="example-title">说明：</div>
+            <p>V2EX 会过滤大部分 HTML 标签，仅保留少数基础格式标签（如 <code>&lt;code&gt;</code>、<code>&lt;b&gt;</code>、<code>&lt;i&gt;</code> 等）。建议使用 Markdown 语法而非 HTML。</p>
+        </div>
+
+        <h3>6. 数学公式</h3>
+        <div class="example-box">
+            <div class="example-title">说明：</div>
+            <p>V2EX 不支持 LaTeX 数学公式（如 <code>$E=mc^2$</code>）。</p>
+        </div>
+
+        <h2>📝 使用建议</h2>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>场景</th>
+                    <th>建议</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>需要插入图片</td>
+                    <td>使用图床上传图片后，通过链接分享</td>
+                </tr>
+                <tr>
+                    <td>需要展示表格</td>
+                    <td>使用代码块 + ASCII 表格，或转换为列表形式</td>
+                </tr>
+                <tr>
+                    <td>需要代码高亮</td>
+                    <td>使用代码块并指定语言，如 ```python</td>
+                </tr>
+                <tr>
+                    <td>长篇技术文章</td>
+                    <td>使用标题分节，代码块展示代码，引用标注重点</td>
+                </tr>
+                <tr>
+                    <td>提问题</td>
+                    <td>使用列表列举要点，代码块展示代码，粗体强调关键信息</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h2>🔗 相关资源</h2>
+
+        <ul>
+            <li><a href="https://www.v2ex.com/help/markdown" target="_blank">V2EX 官方 Markdown 帮助</a></li>
+            <li><a href="https://www.markdownguide.org/basic-syntax/" target="_blank">Markdown 基础语法指南</a></li>
+            <li><a href="https://github.com/233Official/MarkdownToV2EX" target="_blank">本工具 GitHub 仓库</a></li>
+        </ul>
+
+        <div class="note" style="margin-top: 40px;">
+            <div class="note-title">💡 提示</div>
+            <p>使用本转换工具可以自动处理不兼容的语法，确保你的 Markdown 内容在 V2EX 上正确显示。</p>
+        </div>
+
+        <p style="text-align: center; margin-top: 40px; color: #999;">
+            <a href="../index.html" class="back-link">← 返回转换工具</a>
+        </p>
+    </div>
+</body>
+</html>

@@ -1,0 +1,350 @@
+/* Global Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --primary-color: #4a90e2;
+    --secondary-color: #f39c12;
+    --success-color: #27ae60;
+    --danger-color: #e74c3c;
+    --dark-bg: #2c3e50;
+    --light-bg: #ecf0f1;
+    --text-dark: #333;
+    --text-light: #666;
+    --border-color: #ddd;
+    --shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    --shadow-hover: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+    line-height: 1.6;
+    color: var(--text-dark);
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    padding: 20px;
+}
+
+.container {
+    max-width: 1400px;
+    margin: 0 auto;
+    background: white;
+    border-radius: 12px;
+    box-shadow: var(--shadow-hover);
+    overflow: hidden;
+}
+
+/* Header */
+header {
+    background: var(--dark-bg);
+    color: white;
+    padding: 30px;
+    text-align: center;
+}
+
+header h1 {
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+}
+
+.subtitle {
+    font-size: 1.1rem;
+    color: var(--light-bg);
+}
+
+/* Main Content */
+main {
+    padding: 30px;
+}
+
+/* Converter Section */
+.converter-section {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.input-section,
+.output-section {
+    display: flex;
+    flex-direction: column;
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.section-header h2 {
+    font-size: 1.3rem;
+    color: var(--text-dark);
+}
+
+textarea {
+    width: 100%;
+    min-height: 300px;
+    padding: 15px;
+    border: 2px solid var(--border-color);
+    border-radius: 8px;
+    font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+    font-size: 14px;
+    resize: vertical;
+    transition: border-color 0.3s;
+}
+
+textarea:focus {
+    outline: none;
+    border-color: var(--primary-color);
+}
+
+#v2ex-output {
+    background-color: #f8f9fa;
+}
+
+/* Buttons */
+.btn {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.btn-primary {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.btn-primary:hover {
+    background-color: #357abd;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.btn-secondary {
+    background-color: var(--secondary-color);
+    color: white;
+}
+
+.btn-secondary:hover {
+    background-color: #e67e22;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Copy Message */
+.copy-message {
+    display: none;
+    margin-top: 10px;
+    padding: 10px;
+    background-color: var(--success-color);
+    color: white;
+    border-radius: 6px;
+    text-align: center;
+    animation: fadeInOut 2s;
+}
+
+.copy-message.show {
+    display: block;
+}
+
+@keyframes fadeInOut {
+    0%, 100% { opacity: 0; }
+    10%, 90% { opacity: 1; }
+}
+
+/* Preview Section */
+.preview-section {
+    margin-bottom: 30px;
+    padding: 20px;
+    background-color: var(--light-bg);
+    border-radius: 8px;
+}
+
+.preview-content {
+    min-height: 200px;
+    padding: 20px;
+    background-color: white;
+    border-radius: 8px;
+    border: 2px solid var(--border-color);
+}
+
+.preview-content h1 {
+    font-size: 2rem;
+    margin-bottom: 15px;
+    border-bottom: 2px solid var(--border-color);
+    padding-bottom: 10px;
+}
+
+.preview-content h2 {
+    font-size: 1.6rem;
+    margin-top: 20px;
+    margin-bottom: 12px;
+}
+
+.preview-content h3 {
+    font-size: 1.3rem;
+    margin-top: 15px;
+    margin-bottom: 10px;
+}
+
+.preview-content p {
+    margin-bottom: 15px;
+}
+
+.preview-content code {
+    background-color: #f4f4f4;
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+    font-size: 0.9em;
+}
+
+.preview-content pre {
+    background-color: #f4f4f4;
+    padding: 15px;
+    border-radius: 6px;
+    overflow-x: auto;
+    margin-bottom: 15px;
+}
+
+.preview-content pre code {
+    background: none;
+    padding: 0;
+}
+
+.preview-content blockquote {
+    border-left: 4px solid var(--primary-color);
+    padding-left: 15px;
+    margin: 15px 0;
+    color: var(--text-light);
+    font-style: italic;
+}
+
+.preview-content ul,
+.preview-content ol {
+    margin-bottom: 15px;
+    padding-left: 30px;
+}
+
+.preview-content li {
+    margin-bottom: 5px;
+}
+
+.preview-content a {
+    color: var(--primary-color);
+    text-decoration: none;
+}
+
+.preview-content a:hover {
+    text-decoration: underline;
+}
+
+.preview-content hr {
+    border: none;
+    border-top: 2px solid var(--border-color);
+    margin: 20px 0;
+}
+
+/* Info Section */
+.info-section {
+    margin-bottom: 30px;
+}
+
+.info-section h2 {
+    font-size: 1.5rem;
+    margin-bottom: 20px;
+    color: var(--text-dark);
+}
+
+.syntax-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.syntax-item {
+    padding: 20px;
+    background-color: var(--light-bg);
+    border-radius: 8px;
+    border: 2px solid var(--border-color);
+}
+
+.syntax-item h3 {
+    margin-bottom: 15px;
+    font-size: 1.2rem;
+}
+
+.syntax-item ul {
+    list-style: none;
+}
+
+.syntax-item li {
+    padding: 8px 0;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.syntax-item li:last-child {
+    border-bottom: none;
+}
+
+.syntax-item strong {
+    color: var(--primary-color);
+}
+
+/* Footer */
+footer {
+    background-color: var(--dark-bg);
+    color: white;
+    padding: 20px;
+    text-align: center;
+}
+
+footer a {
+    color: var(--primary-color);
+    text-decoration: none;
+    margin: 0 10px;
+}
+
+footer a:hover {
+    text-decoration: underline;
+}
+
+.license {
+    margin-top: 10px;
+    font-size: 0.9rem;
+    color: var(--light-bg);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    header h1 {
+        font-size: 1.8rem;
+    }
+
+    .converter-section,
+    .syntax-grid {
+        grid-template-columns: 1fr;
+    }
+
+    textarea {
+        min-height: 200px;
+    }
+
+    main {
+        padding: 15px;
+    }
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+    /* Optional: Add dark mode styles if needed */
+}
