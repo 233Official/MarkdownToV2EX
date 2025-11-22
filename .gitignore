@@ -1,0 +1,24 @@
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Temporary files
+*.tmp
+*~
+
+# Logs
+*.log
+
+# Node modules (if added in future)
+node_modules/
+package-lock.json
+
+# Build artifacts (if added in future)
+dist/
+build/
