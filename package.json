@@ -9,8 +9,8 @@
   },
   "scripts": {
     "build": "tsc",
+    "test": "jest",
     "start": "node dist/cli.js",
-    "example": "node dist/cli.js examples/sample.md",
     "dev": "tsc --watch",
     "prepublishOnly": "npm run build"
   },
@@ -18,16 +18,18 @@
     "markdown",
     "v2ex",
     "converter",
-    "cli",
     "bbcode"
   ],
-  "author": "233Official",
+  "author": "",
   "license": "AGPL-3.0",
   "devDependencies": {
+    "@types/jest": "^29.5.11",
     "@types/node": "^20.10.6",
+    "jest": "^29.7.0",
+    "ts-jest": "^29.1.1",
     "typescript": "^5.3.3"
   },
   "engines": {
-    "node": ">=18.0.0"
+    "node": ">=14.0.0"
   }
 }

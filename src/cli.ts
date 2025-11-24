@@ -1,22 +1,16 @@
 #!/usr/bin/env node
 
-/**
- * CLI for Markdown to V2EX Converter
- * Usage: md2v2ex <input-file> [options]
- */
-
 import * as fs from 'fs';
 import * as path from 'path';
-import { convertMarkdownToV2exDefault, ConvertOptions } from './convert';
+import { convertMarkdownToV2exDefault, ConvertOptions } from './index';
 
 interface CliOptions extends ConvertOptions {
-  inputFile?: string;
-  outputFile?: string;
-  help?: boolean;
+  input?: string;
+  output?: string;
 }
 
 /**
- * Parse command-line arguments
+ * Parse command line arguments
  */
 function parseArgs(args: string[]): CliOptions {
   const options: CliOptions = {};
@@ -25,26 +19,50 @@ function parseArgs(args: string[]): CliOptions {
     const arg = args[i];
     
     if (arg === '--help' || arg === '-h') {
-      options.help = true;
-    } else if (arg === '--raw') {
-      options.raw = true;
-    } else if (arg === '--no-bold') {
-      options.noBold = true;
-    } else if (arg === '--output' || arg === '-o') {
-      options.outputFile = args[++i];
-    } else if (arg.startsWith('--links=')) {
-      const mode = arg.split('=')[1] as 'label' | 'url' | 'both';
-      if (['label', 'url', 'both'].includes(mode)) {
-        options.linkMode = mode;
+      printHelp();
+      process.exit(0);
+    }
+    
+    if (arg === '--version' || arg === '-v') {
+      printVersion();
+      process.exit(0);
+    }
+    
+    if (arg === '--no-bold') {
+      options.bold = false;
+      continue;
+    }
+    
+    if (arg.startsWith('--links=')) {
+      const value = arg.split('=')[1] as 'label' | 'url' | 'both';
+      if (['label', 'url', 'both'].includes(value)) {
+        options.links = value;
+      } else {
+        console.error(`Invalid value for --links: ${value}`);
+        process.exit(1);
       }
-    } else if (arg.startsWith('--table=')) {
-      const mode = arg.split('=')[1] as 'strip' | 'space' | 'keep';
-      if (['strip', 'space', 'keep'].includes(mode)) {
-        options.tableMode = mode;
+      continue;
+    }
+    
+    if (arg.startsWith('--table=')) {
+      const value = arg.split('=')[1] as 'strip' | 'space' | 'keep';
+      if (['strip', 'space', 'keep'].includes(value)) {
+        options.table = value;
+      } else {
+        console.error(`Invalid value for --table: ${value}`);
+        process.exit(1);
       }
-    } else if (!arg.startsWith('-')) {
-      // Input file
-      options.inputFile = arg;
+      continue;
+    }
+    
+    if (arg === '--output' || arg === '-o') {
+      options.output = args[++i];
+      continue;
+    }
+    
+    // Input file (positional argument)
+    if (!arg.startsWith('-')) {
+      options.input = arg;
     }
   }
   
@@ -52,142 +70,95 @@ function parseArgs(args: string[]): CliOptions {
 }
 
 /**
- * Show help message
+ * Print help message
  */
-function showHelp(): void {
+function printHelp(): void {
   console.log(`
-Markdown to V2EX Converter
+Usage: md2v2ex <input-file> [options]
 
-Usage:
-  md2v2ex <input-file> [options]
-  md2v2ex [options]  (reads from stdin)
+Convert Markdown to V2EX Default (BBCode-style) syntax
 
 Options:
-  -o, --output <file>    Output file (default: stdout)
-  --raw                  Raw passthrough mode (output original unchanged)
-  --no-bold              Disable bold mapping
-  --links=<mode>         Link conversion mode:
-                         - label: text only
-                         - url: URL only
-                         - both: [text](url) (default)
-  --table=<mode>         Table handling mode:
-                         - strip: remove tables
-                         - space: plain text with spaces (default)
-                         - keep: keep as-is
-  -h, --help             Show this help message
+  -o, --output <file>     Output file (default: stdout)
+  --no-bold               Don't convert bold to [b]...[/b], strip markers instead
+  --links=<mode>          Link conversion mode: label|url|both (default: both)
+                          - label: output only link label
+                          - url: output only URL
+                          - both: output label and URL on separate lines
+  --table=<mode>          Table conversion mode: strip|space|keep (default: space)
+                          - strip: remove tables entirely
+                          - space: convert to space-separated text
+                          - keep: keep raw lines, remove alignment rows
+  -h, --help              Show this help message
+  -v, --version           Show version number
 
 Examples:
   md2v2ex input.md
   md2v2ex input.md -o output.txt
-  md2v2ex input.md --no-bold --links=url
-  md2v2ex input.md --raw
-  cat input.md | md2v2ex
-  cat input.md | md2v2ex --table=strip -o output.txt
-
-中文说明:
-  md2v2ex <输入文件> [选项]
-
-选项说明:
-  -o, --output <文件>    输出文件 (默认: 标准输出)
-  --raw                  原始直通模式 (不做任何转换)
-  --no-bold              禁用粗体映射
-  --links=<模式>         链接转换模式:
-                         - label: 仅文本
-                         - url: 仅URL
-                         - both: [文本](URL) (默认)
-  --table=<模式>         表格处理模式:
-                         - strip: 删除表格
-                         - space: 纯文本带空格 (默认)
-                         - keep: 保持原样
-  -h, --help             显示帮助信息
+  md2v2ex input.md --no-bold --links=label
+  md2v2ex input.md --table=strip --links=url
 `);
 }
 
 /**
- * Read input from file or stdin
+ * Print version
  */
-async function readInput(inputFile?: string): Promise<string> {
-  if (inputFile) {
-    // Read from file
-    const filePath = path.resolve(inputFile);
-    try {
-      return fs.readFileSync(filePath, 'utf-8');
-    } catch (error) {
-      console.error(`Error reading file: ${filePath}`);
-      if (error instanceof Error) {
-        console.error(error.message);
-      }
-      process.exit(1);
-    }
-  } else {
-    // Read from stdin
-    return new Promise((resolve, reject) => {
-      let data = '';
-      
-      process.stdin.setEncoding('utf-8');
-      
-      process.stdin.on('data', (chunk) => {
-        data += chunk;
-      });
-      
-      process.stdin.on('end', () => {
-        resolve(data);
-      });
-      
-      process.stdin.on('error', (error) => {
-        reject(error);
-      });
-    });
-  }
-}
-
-/**
- * Write output to file or stdout
- */
-function writeOutput(content: string, outputFile?: string): void {
-  if (outputFile) {
-    // Write to file
-    const filePath = path.resolve(outputFile);
-    try {
-      fs.writeFileSync(filePath, content, 'utf-8');
-      console.error(`Output written to: ${filePath}`);
-    } catch (error) {
-      console.error(`Error writing file: ${filePath}`);
-      if (error instanceof Error) {
-        console.error(error.message);
-      }
-      process.exit(1);
-    }
-  } else {
-    // Write to stdout
-    console.log(content);
-  }
+function printVersion(): void {
+  const packageJson = require('../package.json');
+  console.log(`md2v2ex v${packageJson.version}`);
 }
 
 /**
  * Main CLI function
  */
-async function main() {
+function main(): void {
   const args = process.argv.slice(2);
-  const options = parseArgs(args);
   
-  if (options.help || (args.length === 0 && process.stdin.isTTY)) {
-    showHelp();
-    process.exit(0);
+  if (args.length === 0) {
+    console.error('Error: No input file specified');
+    printHelp();
+    process.exit(1);
   }
   
-  try {
-    // Read input
-    const input = await readInput(options.inputFile);
-    
-    // Convert
-    const output = convertMarkdownToV2exDefault(input, options);
-    
-    // Write output
-    writeOutput(output, options.outputFile);
-  } catch (error) {
-    console.error('Error:', error instanceof Error ? error.message : String(error));
+  const options = parseArgs(args);
+  
+  if (!options.input) {
+    console.error('Error: No input file specified');
     process.exit(1);
+  }
+  
+  // Read input file
+  const inputPath = path.resolve(options.input);
+  
+  if (!fs.existsSync(inputPath)) {
+    console.error(`Error: Input file not found: ${inputPath}`);
+    process.exit(1);
+  }
+  
+  let markdown: string;
+  try {
+    markdown = fs.readFileSync(inputPath, 'utf-8');
+  } catch (error) {
+    console.error(`Error reading input file: ${error}`);
+    process.exit(1);
+  }
+  
+  // Convert
+  const result = convertMarkdownToV2exDefault(markdown, options);
+  
+  // Output
+  if (options.output) {
+    const outputPath = path.resolve(options.output);
+    try {
+      fs.writeFileSync(outputPath, result, 'utf-8');
+      console.error(`✓ Converted successfully. Output written to: ${outputPath}`);
+    } catch (error) {
+      console.error(`Error writing output file: ${error}`);
+      process.exit(1);
+    }
+  } else {
+    // Write to stdout
+    console.log(result);
   }
 }
 
