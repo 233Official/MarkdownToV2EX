@@ -127,8 +127,17 @@ function protectInlineCode(text: string, storage: CodeBlock[]): string {
  */
 function restoreCodeBlocks(text: string, storage: CodeBlock[]): string {
   let result = text;
-  for (const block of storage) {
-    result = result.replace(block.placeholder, block.content);
+  // Build a single regex pattern for all placeholders if there are many
+  if (storage.length > 10) {
+    const placeholders = storage.map(b => b.placeholder.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|');
+    const pattern = new RegExp(placeholders, 'g');
+    const map = new Map(storage.map(b => [b.placeholder, b.content]));
+    result = result.replace(pattern, match => map.get(match) || match);
+  } else {
+    // For small numbers, simple iteration is fine
+    for (const block of storage) {
+      result = result.replace(block.placeholder, block.content);
+    }
   }
   return result;
 }
@@ -138,8 +147,17 @@ function restoreCodeBlocks(text: string, storage: CodeBlock[]): string {
  */
 function restoreInlineCode(text: string, storage: CodeBlock[]): string {
   let result = text;
-  for (const block of storage) {
-    result = result.replace(block.placeholder, block.content);
+  // Build a single regex pattern for all placeholders if there are many
+  if (storage.length > 10) {
+    const placeholders = storage.map(b => b.placeholder.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|');
+    const pattern = new RegExp(placeholders, 'g');
+    const map = new Map(storage.map(b => [b.placeholder, b.content]));
+    result = result.replace(pattern, match => map.get(match) || match);
+  } else {
+    // For small numbers, simple iteration is fine
+    for (const block of storage) {
+      result = result.replace(block.placeholder, block.content);
+    }
   }
   return result;
 }
@@ -225,17 +243,20 @@ function convertBold(text: string): string {
 
 /**
  * Remove italic markers: *text* or _text_ → text
+ * Should be called after bold conversion
  */
 function removeItalic(text: string): string {
   // Remove *text* (single asterisk, not part of **)
-  // Match single * not preceded/followed by another *
-  text = text.replace(/\*([^*\n]+?)\*/g, (match, content) => {
-    // Check if it's actually a single asterisk (not part of **)
-    return content;
-  });
+  // First, temporarily protect any remaining ** patterns
+  text = text.replace(/\*\*/g, '\x01DOUBLESTAR\x01');
+  
+  // Now remove single asterisks
+  text = text.replace(/\*([^*\n]+?)\*/g, '$1');
+  
+  // Restore ** patterns
+  text = text.replace(/\x01DOUBLESTAR\x01/g, '**');
   
   // Remove _text_ (single underscore, not part of __)
-  // Match single _ not preceded/followed by another _
   text = text.replace(/(^|[^_])_([^_\n]+?)_($|[^_])/g, '$1$2$3');
   
   return text;
