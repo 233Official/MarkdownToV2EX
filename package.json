@@ -1,0 +1,35 @@
+{
+  "name": "markdown-to-v2ex",
+  "version": "1.0.0",
+  "description": "Convert standard Markdown to V2EX Default (BBCode-style) syntax",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "bin": {
+    "md2v2ex": "dist/cli.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "test": "jest",
+    "start": "node dist/cli.js",
+    "dev": "tsc --watch",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "markdown",
+    "v2ex",
+    "converter",
+    "bbcode"
+  ],
+  "author": "",
+  "license": "AGPL-3.0",
+  "devDependencies": {
+    "@types/jest": "^29.5.11",
+    "@types/node": "^20.10.6",
+    "jest": "^29.7.0",
+    "ts-jest": "^29.1.1",
+    "typescript": "^5.3.3"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  }
+}
