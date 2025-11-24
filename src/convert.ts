@@ -112,7 +112,7 @@ function protectInlineCode(text: string, storage: CodeBlock[]): string {
   let index = 0;
 
   return text.replace(pattern, (match, code) => {
-    // V2EX inline code format (corrected from problem statement typo)
+    // V2EX inline code format: [code]content[/code]
     const v2exInlineCode = `[code]${code}[/code]`;
     
     const placeholder = `\x00INLINECODE${index}\x00`;
@@ -148,13 +148,22 @@ function restoreInlineCode(text: string, storage: CodeBlock[]): string {
  * Remove HTML tags
  */
 function removeHtmlTags(text: string): string {
-  // Remove HTML comments
-  text = text.replace(/<!--[\s\S]*?-->/g, '');
+  let result = text;
   
-  // Remove HTML tags
-  text = text.replace(/<[^>]+>/g, '');
+  // Remove HTML comments (multiple passes to handle nested/broken patterns)
+  let prevLength;
+  do {
+    prevLength = result.length;
+    result = result.replace(/<!--[\s\S]*?-->/g, '');
+  } while (result.length !== prevLength);
   
-  return text;
+  // Remove HTML tags (multiple passes to handle nested/broken patterns)
+  do {
+    prevLength = result.length;
+    result = result.replace(/<[^>]*>/g, '');
+  } while (result.length !== prevLength);
+  
+  return result;
 }
 
 /**
@@ -219,10 +228,15 @@ function convertBold(text: string): string {
  */
 function removeItalic(text: string): string {
   // Remove *text* (single asterisk, not part of **)
-  text = text.replace(/(?<!\*)\*([^*\n]+?)\*(?!\*)/g, '$1');
+  // Match single * not preceded/followed by another *
+  text = text.replace(/\*([^*\n]+?)\*/g, (match, content) => {
+    // Check if it's actually a single asterisk (not part of **)
+    return content;
+  });
   
   // Remove _text_ (single underscore, not part of __)
-  text = text.replace(/(?<!_)_([^_\n]+?)_(?!_)/g, '$1');
+  // Match single _ not preceded/followed by another _
+  text = text.replace(/(^|[^_])_([^_\n]+?)_($|[^_])/g, '$1$2$3');
   
   return text;
 }

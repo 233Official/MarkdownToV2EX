@@ -19,7 +19,7 @@
     "converter",
     "cli"
   ],
-  "author": "",
+  "author": "233Official",
   "license": "AGPL-3.0",
   "devDependencies": {
     "@types/node": "^20.10.0",
