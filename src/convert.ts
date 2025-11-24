@@ -3,6 +3,9 @@
  * Converts standard Markdown to V2EX forum-compatible format
  */
 
+// Constants
+const BULK_REPLACEMENT_THRESHOLD = 10; // Use optimized bulk replacement for this many or more items
+
 export interface ConvertOptions {
   /** Disable bold mapping (skip bold conversion) */
   noBold?: boolean;
@@ -123,12 +126,13 @@ function protectInlineCode(text: string, storage: CodeBlock[]): string {
 }
 
 /**
- * Restore code blocks
+ * Restore placeholders with their actual content
+ * Uses bulk replacement optimization for large numbers of items
  */
-function restoreCodeBlocks(text: string, storage: CodeBlock[]): string {
+function restorePlaceholders(text: string, storage: CodeBlock[]): string {
   let result = text;
   // Build a single regex pattern for all placeholders if there are many
-  if (storage.length > 10) {
+  if (storage.length > BULK_REPLACEMENT_THRESHOLD) {
     const placeholders = storage.map(b => b.placeholder.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|');
     const pattern = new RegExp(placeholders, 'g');
     const map = new Map(storage.map(b => [b.placeholder, b.content]));
@@ -143,23 +147,17 @@ function restoreCodeBlocks(text: string, storage: CodeBlock[]): string {
 }
 
 /**
+ * Restore code blocks
+ */
+function restoreCodeBlocks(text: string, storage: CodeBlock[]): string {
+  return restorePlaceholders(text, storage);
+}
+
+/**
  * Restore inline code
  */
 function restoreInlineCode(text: string, storage: CodeBlock[]): string {
-  let result = text;
-  // Build a single regex pattern for all placeholders if there are many
-  if (storage.length > 10) {
-    const placeholders = storage.map(b => b.placeholder.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|');
-    const pattern = new RegExp(placeholders, 'g');
-    const map = new Map(storage.map(b => [b.placeholder, b.content]));
-    result = result.replace(pattern, match => map.get(match) || match);
-  } else {
-    // For small numbers, simple iteration is fine
-    for (const block of storage) {
-      result = result.replace(block.placeholder, block.content);
-    }
-  }
-  return result;
+  return restorePlaceholders(text, storage);
 }
 
 /**
