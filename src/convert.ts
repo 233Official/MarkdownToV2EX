@@ -43,30 +43,30 @@ export function convertMarkdownToV2exDefault(
   result = removeHtmlTags(result);
   result = removeFootnotes(result);
 
-  // Step 3: Convert headings
+  // Step 3: Convert horizontal rules (before formatting to avoid conflicts with ***)
+  result = convertHorizontalRules(result);
+
+  // Step 4: Convert headings
   result = convertHeadings(result);
 
-  // Step 4: Convert formatting (bold, italic, strikethrough)
+  // Step 5: Convert formatting (bold, italic, strikethrough)
   if (!options.noBold) {
     result = convertBold(result);
   }
   result = removeItalic(result);
   result = removeStrikethrough(result);
 
-  // Step 5: Convert blockquotes
+  // Step 6: Convert blockquotes
   result = convertBlockquotes(result);
 
-  // Step 6: Convert lists (unordered, ordered, task lists)
+  // Step 7: Convert lists (unordered, ordered, task lists)
   result = convertTaskLists(result);
   result = convertUnorderedLists(result);
   // Ordered lists: keep numbers as-is (no processing needed)
 
-  // Step 7: Convert links and images
+  // Step 8: Convert links and images
   result = convertImages(result);
   result = convertLinks(result, options.linkMode || 'both');
-
-  // Step 8: Convert horizontal rules
-  result = convertHorizontalRules(result);
 
   // Step 9: Convert tables
   result = convertTables(result, options.tableMode || 'space');
