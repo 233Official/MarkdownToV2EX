@@ -1,0 +1,31 @@
+{
+  "name": "markdown-to-v2ex",
+  "version": "1.0.0",
+  "description": "Convert Markdown to V2EX Default syntax format",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "bin": {
+    "md2v2ex": "dist/cli.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/cli.js",
+    "example": "node dist/cli.js examples/sample.md",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "markdown",
+    "v2ex",
+    "converter",
+    "cli"
+  ],
+  "author": "",
+  "license": "AGPL-3.0",
+  "devDependencies": {
+    "@types/node": "^20.10.0",
+    "typescript": "^5.3.0"
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  }
+}

@@ -19,6 +19,98 @@ V2EX 是一个知名的技术社区，但其 Markdown 支持相比标准 Markdow
 
 访问：**[https://233official.github.io/MarkdownToV2EX/](https://233official.github.io/MarkdownToV2EX/)**
 
+## 💻 命令行工具 (CLI)
+
+### 安装
+
+```bash
+# 克隆仓库
+git clone https://github.com/233Official/MarkdownToV2EX.git
+cd MarkdownToV2EX
+
+# 安装依赖
+npm install
+
+# 构建
+npm run build
+```
+
+### 使用方法
+
+```bash
+# 基本用法
+node dist/cli.js input.md
+
+# 输出到文件
+node dist/cli.js input.md -o output.txt
+
+# 原始直通模式（不转换）
+node dist/cli.js input.md --raw
+
+# 禁用粗体转换
+node dist/cli.js input.md --no-bold
+
+# 设置链接模式
+node dist/cli.js input.md --links=url     # 仅显示 URL
+node dist/cli.js input.md --links=label   # 仅显示文本
+node dist/cli.js input.md --links=both    # [文本](URL)（默认）
+
+# 设置表格处理模式
+node dist/cli.js input.md --table=strip   # 删除表格
+node dist/cli.js input.md --table=space   # 转为纯文本（默认）
+node dist/cli.js input.md --table=keep    # 保持原样
+
+# 从标准输入读取
+cat input.md | node dist/cli.js
+echo "# 标题\n\n**粗体**" | node dist/cli.js
+
+# 查看帮助
+node dist/cli.js --help
+```
+
+### 转换规则
+
+CLI 工具使用以下规则将 Markdown 转换为 V2EX Default 语法：
+
+| Markdown 语法 | V2EX 输出 | 说明 |
+|--------------|-----------|------|
+| `# 标题` | 标题文本 + `======` | 1-2级标题用 `======` |
+| `### 标题` | 标题文本 + `------` | 3级及以上用 `------` |
+| `**粗体**` | `[b]粗体[/b]` | 可用 `--no-bold` 禁用 |
+| `*斜体*` | 斜体 | 移除斜体标记 |
+| `~~删除线~~` | 删除线 | 移除删除线标记 |
+| `` `代码` `` | `[code]代码[/code]` | 行内代码 |
+| ` ```code``` ` | `[code]code[/code]` | 代码块，语言标识被忽略 |
+| `> 引用` | `[blockquote]引用[/blockquote]` | 连续引用行合并 |
+| `- 列表项` | 列表项 | 移除无序列表标记 |
+| `1. 列表项` | `1. 列表项` | 保留有序列表编号 |
+| `- [x] 任务` | `[x] 任务` | 任务列表保留复选框 |
+| `[文本](url)` | 根据 `--links` 选项 | label/url/both |
+| `![图片](url)` | `url` | 图片转为 URL |
+| `---` | `------` | 水平分隔线 |
+| 表格 | 根据 `--table` 选项 | strip/space/keep |
+| HTML 标签 | （删除） | 移除所有 HTML |
+| 脚注 `[^1]` | （删除） | 移除脚注及定义 |
+
+### API 使用
+
+也可以在 Node.js 项目中作为库使用：
+
+```typescript
+import { convertMarkdownToV2exDefault, ConvertOptions } from 'markdown-to-v2ex';
+
+const markdown = '# 标题\n\n**粗体** *斜体*';
+const options: ConvertOptions = {
+  noBold: false,
+  linkMode: 'both',
+  tableMode: 'space',
+  raw: false
+};
+
+const result = convertMarkdownToV2exDefault(markdown, options);
+console.log(result);
+```
+
 ## 📋 功能特性
 
 ### 支持的转换
@@ -84,14 +176,25 @@ php -S localhost:8000
 MarkdownToV2EX/
 ├── index.html              # 主页面
 ├── src/
-│   ├── converter.js        # 转换核心逻辑
-│   ├── app.js             # 应用交互逻辑
-│   └── style.css          # 样式文件
+│   ├── converter.js        # Web 版转换核心逻辑
+│   ├── app.js             # Web 应用交互逻辑
+│   ├── style.css          # 样式文件
+│   ├── convert.ts         # CLI 转换核心逻辑 (TypeScript)
+│   ├── cli.ts             # 命令行接口 (TypeScript)
+│   └── index.ts           # 公共 API 导出 (TypeScript)
+├── dist/                   # TypeScript 编译输出
+│   ├── convert.js
+│   ├── cli.js
+│   └── index.js
+├── examples/
+│   └── sample.md          # 示例 Markdown 文件
 ├── docs/
 │   └── syntax-reference.html  # 语法参考文档
 ├── .github/
 │   └── workflows/
 │       └── deploy.yml     # GitHub Actions 部署配置
+├── package.json           # Node.js 项目配置
+├── tsconfig.json          # TypeScript 配置
 ├── README.md              # 项目说明
 └── LICENSE               # 开源协议
 ```
@@ -210,4 +313,199 @@ def hello():
 
 ---
 
+# English Documentation
+
+## 📝 Markdown to V2EX Converter
+
+A tool to convert standard Markdown to V2EX forum-compatible format, available both as a web application and command-line interface.
+
+## 🚀 Online Usage
+
+Visit: **[https://233official.github.io/MarkdownToV2EX/](https://233official.github.io/MarkdownToV2EX/)**
+
+## 💻 Command Line Interface (CLI)
+
+### Installation
+
+```bash
+# Clone the repository
+git clone https://github.com/233Official/MarkdownToV2EX.git
+cd MarkdownToV2EX
+
+# Install dependencies
+npm install
+
+# Build
+npm run build
+```
+
+### Usage
+
+```bash
+# Basic usage
+node dist/cli.js input.md
+
+# Output to file
+node dist/cli.js input.md -o output.txt
+
+# Raw passthrough mode (no conversion)
+node dist/cli.js input.md --raw
+
+# Disable bold conversion
+node dist/cli.js input.md --no-bold
+
+# Set link mode
+node dist/cli.js input.md --links=url     # URL only
+node dist/cli.js input.md --links=label   # Text only
+node dist/cli.js input.md --links=both    # [text](url) (default)
+
+# Set table handling mode
+node dist/cli.js input.md --table=strip   # Remove tables
+node dist/cli.js input.md --table=space   # Plain text (default)
+node dist/cli.js input.md --table=keep    # Keep as-is
+
+# Read from stdin
+cat input.md | node dist/cli.js
+echo "# Title\n\n**bold**" | node dist/cli.js
+
+# Show help
+node dist/cli.js --help
+```
+
+### Conversion Rules
+
+The CLI tool converts Markdown to V2EX Default syntax using these rules:
+
+| Markdown Syntax | V2EX Output | Notes |
+|----------------|-------------|-------|
+| `# Heading` | Heading text + `======` | Levels 1-2 use `======` |
+| `### Heading` | Heading text + `------` | Levels 3+ use `------` |
+| `**bold**` | `[b]bold[/b]` | Can disable with `--no-bold` |
+| `*italic*` | italic | Removes italic markers |
+| `~~strike~~` | strike | Removes strikethrough markers |
+| `` `code` `` | `[code]code[/code]` | Inline code |
+| ` ```code``` ` | `[code]code[/code]` | Code blocks, language ignored |
+| `> quote` | `[blockquote]quote[/blockquote]` | Consecutive lines merged |
+| `- item` | item | Removes unordered list markers |
+| `1. item` | `1. item` | Keeps ordered list numbers |
+| `- [x] task` | `[x] task` | Task lists keep checkboxes |
+| `[text](url)` | Based on `--links` option | label/url/both |
+| `![img](url)` | `url` | Images become URLs |
+| `---` | `------` | Horizontal rules |
+| Tables | Based on `--table` option | strip/space/keep |
+| HTML tags | (removed) | All HTML removed |
+| Footnotes `[^1]` | (removed) | Footnotes and definitions removed |
+
+### API Usage
+
+You can also use it as a library in your Node.js projects:
+
+```typescript
+import { convertMarkdownToV2exDefault, ConvertOptions } from 'markdown-to-v2ex';
+
+const markdown = '# Title\n\n**bold** *italic*';
+const options: ConvertOptions = {
+  noBold: false,
+  linkMode: 'both',
+  tableMode: 'space',
+  raw: false
+};
+
+const result = convertMarkdownToV2exDefault(markdown, options);
+console.log(result);
+```
+
+### Example
+
+**Input Markdown:**
+
+```markdown
+# Sample Document
+
+This is **bold** and *italic* text.
+
+## Code Example
+
+```javascript
+console.log('Hello, V2EX!');
+```
+
+- List item 1
+- List item 2
+
+> This is a quote
+
+[Visit V2EX](https://v2ex.com)
+```
+
+**V2EX Output:**
+
+```
+Sample Document
+======
+
+This is [b]bold[/b] and italic text.
+
+Code Example
+------
+[code]console.log('Hello, V2EX!');[/code]
+
+List item 1
+List item 2
+
+[blockquote]
+This is a quote
+[/blockquote]
+
+[Visit V2EX](https://v2ex.com)
+```
+
+## 🌟 Features
+
+### Web Application
+- 🎯 **Real-time conversion**: Convert as you type
+- 👁️ **Live preview**: See how it will look
+- ⚠️ **Smart warnings**: Detects incompatible syntax
+- 📋 **One-click copy**: Quick copy to clipboard
+- 💾 **Auto-save**: Never lose your content
+- ⌨️ **Keyboard shortcuts**:
+  - `Ctrl/Cmd + K`: Clear input
+  - `Ctrl/Cmd + Enter`: Copy output
+
+### Command Line Interface
+- ✅ File and stdin input support
+- ✅ Customizable conversion options
+- ✅ Raw passthrough mode
+- ✅ Flexible output options
+- ✅ TypeScript support
+
+## 🛠️ Technology Stack
+
+- **Frontend**: Vanilla JavaScript
+- **CLI**: TypeScript, Node.js
+- **Deployment**: GitHub Pages
+- **CI/CD**: GitHub Actions
+
+## 🤝 Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+## 📄 License
+
+This project is licensed under the [AGPL-3.0 License](LICENSE).
+
+## 🙏 Acknowledgments
+
+- Inspired by: [NgaCodeConverter](https://github.com/sjn4048/NgaCodeConverter)
+- Thanks to the V2EX community
+
+---
+
 **如果觉得这个项目有帮助，请给个 ⭐ Star 支持一下！**
+**If you find this project helpful, please give it a ⭐ Star!**

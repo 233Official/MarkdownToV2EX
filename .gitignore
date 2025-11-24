@@ -15,10 +15,13 @@ Thumbs.db
 # Logs
 *.log
 
-# Node modules (if added in future)
+# Node modules
 node_modules/
 package-lock.json
+yarn.lock
+pnpm-lock.yaml
 
-# Build artifacts (if added in future)
+# Build artifacts
 dist/
 build/
+*.tsbuildinfo
