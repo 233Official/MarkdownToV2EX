@@ -423,4 +423,199 @@ V2EX Default 语法是 V2EX 论坛的基础格式，使用 BBCode 风格的标�
 
 ---
 
+# English Documentation
+
+## 📝 Markdown to V2EX Converter
+
+A tool to convert standard Markdown to V2EX forum-compatible format, available both as a web application and command-line interface.
+
+## 🚀 Online Usage
+
+Visit: **[https://233official.github.io/MarkdownToV2EX/](https://233official.github.io/MarkdownToV2EX/)**
+
+## 💻 Command Line Interface (CLI)
+
+### Installation
+
+```bash
+# Clone the repository
+git clone https://github.com/233Official/MarkdownToV2EX.git
+cd MarkdownToV2EX
+
+# Install dependencies
+npm install
+
+# Build
+npm run build
+```
+
+### Usage
+
+```bash
+# Basic usage
+node dist/cli.js input.md
+
+# Output to file
+node dist/cli.js input.md -o output.txt
+
+# Raw passthrough mode (no conversion)
+node dist/cli.js input.md --raw
+
+# Disable bold conversion
+node dist/cli.js input.md --no-bold
+
+# Set link mode
+node dist/cli.js input.md --links=url     # URL only
+node dist/cli.js input.md --links=label   # Text only
+node dist/cli.js input.md --links=both    # [text](url) (default)
+
+# Set table handling mode
+node dist/cli.js input.md --table=strip   # Remove tables
+node dist/cli.js input.md --table=space   # Plain text (default)
+node dist/cli.js input.md --table=keep    # Keep as-is
+
+# Read from stdin
+cat input.md | node dist/cli.js
+echo "# Title\n\n**bold**" | node dist/cli.js
+
+# Show help
+node dist/cli.js --help
+```
+
+### Conversion Rules
+
+The CLI tool converts Markdown to V2EX Default syntax using these rules:
+
+| Markdown Syntax | V2EX Output | Notes |
+|----------------|-------------|-------|
+| `# Heading` | Heading text + `======` | Levels 1-2 use `======` |
+| `### Heading` | Heading text + `------` | Levels 3+ use `------` |
+| `**bold**` | `[b]bold[/b]` | Can disable with `--no-bold` |
+| `*italic*` | italic | Removes italic markers |
+| `~~strike~~` | strike | Removes strikethrough markers |
+| `` `code` `` | `[code]code[/code]` | Inline code |
+| ` ```code``` ` | `[code]code[/code]` | Code blocks, language ignored |
+| `> quote` | `[blockquote]quote[/blockquote]` | Consecutive lines merged |
+| `- item` | item | Removes unordered list markers |
+| `1. item` | `1. item` | Keeps ordered list numbers |
+| `- [x] task` | `[x] task` | Task lists keep checkboxes |
+| `[text](url)` | Based on `--links` option | label/url/both |
+| `![img](url)` | `url` | Images become URLs |
+| `---` | `------` | Horizontal rules |
+| Tables | Based on `--table` option | strip/space/keep |
+| HTML tags | (removed) | All HTML removed |
+| Footnotes `[^1]` | (removed) | Footnotes and definitions removed |
+
+### API Usage
+
+You can also use it as a library in your Node.js projects:
+
+```typescript
+import { convertMarkdownToV2exDefault, ConvertOptions } from 'markdown-to-v2ex';
+
+const markdown = '# Title\n\n**bold** *italic*';
+const options: ConvertOptions = {
+  noBold: false,
+  linkMode: 'both',
+  tableMode: 'space',
+  raw: false
+};
+
+const result = convertMarkdownToV2exDefault(markdown, options);
+console.log(result);
+```
+
+### Example
+
+**Input Markdown:**
+
+```markdown
+# Sample Document
+
+This is **bold** and *italic* text.
+
+## Code Example
+
+```javascript
+console.log('Hello, V2EX!');
+```
+
+- List item 1
+- List item 2
+
+> This is a quote
+
+[Visit V2EX](https://v2ex.com)
+```
+
+**V2EX Output:**
+
+```
+Sample Document
+======
+
+This is [b]bold[/b] and italic text.
+
+Code Example
+------
+[code]console.log('Hello, V2EX!');[/code]
+
+List item 1
+List item 2
+
+[blockquote]
+This is a quote
+[/blockquote]
+
+[Visit V2EX](https://v2ex.com)
+```
+
+## 🌟 Features
+
+### Web Application
+- 🎯 **Real-time conversion**: Convert as you type
+- 👁️ **Live preview**: See how it will look
+- ⚠️ **Smart warnings**: Detects incompatible syntax
+- 📋 **One-click copy**: Quick copy to clipboard
+- 💾 **Auto-save**: Never lose your content
+- ⌨️ **Keyboard shortcuts**:
+  - `Ctrl/Cmd + K`: Clear input
+  - `Ctrl/Cmd + Enter`: Copy output
+
+### Command Line Interface
+- ✅ File and stdin input support
+- ✅ Customizable conversion options
+- ✅ Raw passthrough mode
+- ✅ Flexible output options
+- ✅ TypeScript support
+
+## 🛠️ Technology Stack
+
+- **Frontend**: Vanilla JavaScript
+- **CLI**: TypeScript, Node.js
+- **Deployment**: GitHub Pages
+- **CI/CD**: GitHub Actions
+
+## 🤝 Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+## 📄 License
+
+This project is licensed under the [AGPL-3.0 License](LICENSE).
+
+## 🙏 Acknowledgments
+
+- Inspired by: [NgaCodeConverter](https://github.com/sjn4048/NgaCodeConverter)
+- Thanks to the V2EX community
+
+---
+
 **如果觉得这个项目有帮助，请给个 ⭐ Star 支持一下！**
+**If you find this project helpful, please give it a ⭐ Star!**
